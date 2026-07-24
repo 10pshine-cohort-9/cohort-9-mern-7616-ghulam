@@ -12,8 +12,11 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-surface-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary-500" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 animate-fade-in">
+          <div className="w-10 h-10 border-2 border-primary-container border-t-transparent rounded-full animate-spin" />
+          <span className="text-label-caps text-muted-green">LOADING</span>
+        </div>
       </div>
     );
   }
