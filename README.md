@@ -46,11 +46,10 @@ npm run preview   # serve the production build locally
 
 ## Project structure
 
-```
+```text
 frontend/
   public/           static assets served as-is
   src/
-    lib/            small pure helpers
     index.css       design tokens and base styles
 ```
 

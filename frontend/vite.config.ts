@@ -20,5 +20,9 @@ export default defineConfig({
   ],
   server: {
     port: 5173,
+    // Fail loudly instead of silently sliding to 5174. The port is documented
+    // in the README and the backend will proxy to it, so quiet drift would
+    // break CORS in a way that is tedious to trace back to here.
+    strictPort: true,
   },
 })
