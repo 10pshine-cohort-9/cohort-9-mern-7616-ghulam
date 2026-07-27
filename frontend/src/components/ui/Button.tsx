@@ -49,9 +49,10 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      // A loading button stays focusable but rejects clicks, so the label it is
-      // announced under does not vanish from the tab order mid-request.
-      disabled={disabled ?? isLoading}
+      // `||`, not `??`: nullish coalescing only falls through on null and
+      // undefined, so an explicit `disabled={false}` alongside `isLoading` left
+      // the button live mid-request and double-submittable.
+      disabled={disabled || isLoading}
       aria-busy={isLoading || undefined}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-full text-label-sm font-semibold',
