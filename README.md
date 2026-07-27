@@ -16,9 +16,10 @@ The `/backend` folder does not exist yet.
 
 ## Tech stack
 
-Frontend is React 19 with TypeScript, built by Vite, styled with Tailwind CSS v4, and
-using TipTap for rich-text editing. Backend will be Node and Express with TypeScript,
-over MongoDB via Mongoose, with JWT authentication and Pino logging.
+Frontend is React 19 with TypeScript, built by Vite, and styled with Tailwind CSS v4.
+Rich-text editing will use TipTap, which is not installed yet. Backend will be Node and
+Express with TypeScript, over MongoDB via Mongoose, with JWT authentication and Pino
+logging.
 
 ## Requirements
 
@@ -50,6 +51,12 @@ npm run preview   # serve the production build locally
 frontend/
   public/           static assets served as-is
   src/
+    components/ui/  reusable interface primitives
+    context/        React context providers
+    hooks/          shared React hooks
+    lib/            framework-free helpers
+    services/       data access behind swappable adapters
+    types/          shared domain types
     index.css       design tokens and base styles
 ```
 
