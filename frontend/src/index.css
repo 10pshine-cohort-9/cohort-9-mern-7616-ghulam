@@ -1,0 +1,217 @@
+@import 'tailwindcss';
+
+@import '@fontsource-variable/hanken-grotesk';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Light palette — "Ethereal Slate" */
+:root {
+  --background: #f9f9f7;
+  --surface: #f9f9f7;
+  --surface-dim: #dadad8;
+  --surface-bright: #f9f9f7;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f4f4f1;
+  --surface-container: #eeeeec;
+  --surface-container-high: #e8e8e6;
+  --surface-container-highest: #e2e3e0;
+  --surface-variant: #e2e3e0;
+  --on-surface: #1a1c1b;
+  --on-surface-variant: #404946;
+  --primary: #002622;
+  --on-primary: #ffffff;
+  --primary-container: #013e37;
+  /*
+   * Ethereal Slate documents this as #76a9a0, but no Stitch mockup ever uses
+   * that value as a foreground — the component library renders primary buttons
+   * as `bg-primary-container` + white text. Aligning the token with real usage
+   * keeps one pairing valid in both themes; the dark palette's cream already
+   * plays the same role.
+   */
+  --on-primary-container: #ffffff;
+  --secondary: #695e2f;
+  --on-secondary: #ffffff;
+  --secondary-container: #efe0a5;
+  --on-secondary-container: #6d6233;
+  --secondary-fixed: #f2e2a7;
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+  --outline: #707976;
+  --outline-variant: #c0c8c5;
+  --muted-green: #5f7a76;
+  --accent-gold: #d4af37;
+  --glass-surface: rgb(255 255 255 / 0.7);
+  --glass-stroke: rgb(1 62 55 / 0.08);
+  --ambient-shadow: 0 8px 32px rgb(1 62 55 / 0.05);
+  --skeleton-from: #f0f0f0;
+  --skeleton-via: #f8f8f8;
+}
+
+/* Dark palette — "Ethereal Obsidian" */
+.dark {
+  --background: #061d1b;
+  --surface: #061d1b;
+  --surface-dim: #041513;
+  --surface-bright: #0a2825;
+  --surface-container-lowest: #020c0b;
+  --surface-container-low: #082321;
+  --surface-container: #103a35;
+  --surface-container-high: #164f48;
+  --surface-container-highest: #1c645c;
+  --surface-variant: #233936;
+  --on-surface: #fdfbf7;
+  --on-surface-variant: #b2c9c6;
+  --primary: #ffefb3;
+  --on-primary: #013e37;
+  --primary-container: #1d4440;
+  --on-primary-container: #ffefb3;
+  --secondary: #ffefb3;
+  --on-secondary: #013e37;
+  --secondary-container: #1d4440;
+  --on-secondary-container: #ffefb3;
+  --secondary-fixed: #d5c68e;
+  --error: #ffb4ab;
+  --on-error: #690005;
+  --error-container: #93000a;
+  --on-error-container: #ffdad6;
+  --outline: #2d5e58;
+  --outline-variant: #1d4440;
+  --muted-green: #b2c9c6;
+  --accent-gold: #d4af37;
+  --glass-surface: rgb(16 58 53 / 0.7);
+  --glass-stroke: rgb(255 239 179 / 0.1);
+  --ambient-shadow: 0 8px 32px rgb(0 0 0 / 0.4), 0 0 1px rgb(255 239 179 / 0.1);
+  --skeleton-from: #082321;
+  --skeleton-via: #103a35;
+}
+
+/*
+ * `inline` matters here. Without it Tailwind resolves each variable at build
+ * time, freezing every utility to the light palette so the `.dark` overrides
+ * above would never take effect.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-surface-variant: var(--surface-variant);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-secondary: var(--secondary);
+  --color-on-secondary: var(--on-secondary);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-secondary-fixed: var(--secondary-fixed);
+  --color-error: var(--error);
+  --color-on-error: var(--on-error);
+  --color-error-container: var(--error-container);
+  --color-on-error-container: var(--on-error-container);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+  --color-muted-green: var(--muted-green);
+  --color-accent-gold: var(--accent-gold);
+  --color-glass-stroke: var(--glass-stroke);
+
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --text-headline-xl: 48px;
+  --text-headline-xl--line-height: 1.1;
+  --text-headline-xl--letter-spacing: -0.04em;
+  --text-headline-xl--font-weight: 700;
+  --text-headline-lg: 32px;
+  --text-headline-lg--line-height: 1.2;
+  --text-headline-lg--letter-spacing: -0.02em;
+  --text-headline-lg--font-weight: 600;
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 1.3;
+  --text-headline-md--font-weight: 600;
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 1.6;
+  --text-body-lg--font-weight: 500;
+  --text-body-md: 16px;
+  --text-body-md--line-height: 1.6;
+  --text-body-md--font-weight: 500;
+  --text-label-sm: 13px;
+  --text-label-sm--line-height: 1.4;
+  --text-label-sm--font-weight: 600;
+  --text-label-caps: 12px;
+  --text-label-caps--line-height: 1;
+  --text-label-caps--letter-spacing: 0.1em;
+  --text-label-caps--font-weight: 500;
+
+  --radius-xxl: 24px;
+
+  --spacing-unit: 8px;
+  --spacing-stack-sm: 16px;
+  --spacing-stack-md: 32px;
+  --spacing-stack-lg: 64px;
+  --spacing-gutter: 24px;
+  --spacing-margin-page: 48px;
+
+  --container-max: 1200px;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md);
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--secondary-container);
+    color: var(--primary);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--surface-container-highest);
+    border-radius: 10px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility glass-panel {
+  background: var(--glass-surface);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-stroke);
+}
+
+@utility ambient-shadow {
+  box-shadow: var(--ambient-shadow);
+}

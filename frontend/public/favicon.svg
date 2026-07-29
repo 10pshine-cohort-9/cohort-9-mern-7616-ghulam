@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Aether Notes">
+  <rect width="32" height="32" rx="8" fill="#013e37" />
+  <path
+    d="M16 5 Q17.2 14.8 27 16 Q17.2 17.2 16 27 Q14.8 17.2 5 16 Q14.8 14.8 16 5 Z"
+    fill="#ffefb3"
+  />
+</svg>
