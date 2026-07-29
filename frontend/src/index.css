@@ -202,16 +202,82 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+
+    /*
+     * The blanket rule above suits a finite entrance but not a loop: an
+     * infinite animation compressed to 0.01ms restarts every frame, which
+     * repaints continuously and reads as a flicker — louder than the motion it
+     * was meant to remove. These two are the only loops the app ships. Higher
+     * specificity in the same layer is what lets them beat the `*` rule.
+     */
+    .skeleton-shimmer,
+    .animate-spin {
+      animation: none !important;
+    }
   }
 }
 
+/*
+ * Declare `backdrop-filter` once and let Lightning CSS add the prefix. Writing
+ * `-webkit-backdrop-filter` by hand underneath made it drop the standard
+ * property as redundant, which left Firefox — unprefixed-only — with no blur at
+ * all on any glass surface.
+ */
 @utility glass-panel {
   background: var(--glass-surface);
   backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--glass-stroke);
 }
 
 @utility ambient-shadow {
   box-shadow: var(--ambient-shadow);
+}
+
+/*
+ * Keyframes cannot be expressed from a component, so the three the primitives
+ * need live here. Entrances run at 200ms with an ease-out curve: the project's
+ * ceiling is 300ms, and `ease-in` on an entrance makes a panel feel like it is
+ * arriving late.
+ */
+@utility skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-from) 25%,
+    var(--skeleton-via) 50%,
+    var(--skeleton-from) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+@utility toast-in {
+  animation: toast-in 200ms ease-out;
+}
+
+@utility dialog-in {
+  animation: dialog-in 200ms ease-out;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.98);
+  }
 }
