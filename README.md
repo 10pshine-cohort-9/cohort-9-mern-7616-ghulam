@@ -49,15 +49,18 @@ npm run preview   # serve the production build locally
 
 ```text
 frontend/
-  public/           static assets served as-is
+  public/               static assets served as-is
   src/
-    components/ui/  reusable interface primitives
-    context/        React context providers
-    hooks/          shared React hooks
-    lib/            framework-free helpers
-    services/       data access behind swappable adapters
-    types/          shared domain types
-    index.css       design tokens and base styles
+    components/layout/  the app shell: sidebar, top bar, theme toggle
+    components/ui/      reusable interface primitives
+    context/            React context providers
+    hooks/              shared React hooks
+    lib/                framework-free helpers
+    pages/              route-level screens
+    routes/             the route table and the auth guard
+    services/           data access behind swappable adapters
+    types/              shared domain types
+    index.css           design tokens and base styles
 ```
 
 More directories are added as features land. The layout follows the branching strategy's
@@ -68,7 +71,10 @@ requirement of `/frontend` and `/backend` at the repository root.
 The interface follows a two-palette design system: a light theme and a dark theme, both
 defined as CSS custom properties in `frontend/src/index.css` and exposed to Tailwind
 through `@theme inline`. Switching themes is a class change on the root element, so no
-component needs to know which theme is active.
+component needs to know which theme is active. Until the user picks a theme the app
+follows the operating system; after that the choice is remembered. A small script in
+`index.html` applies it before the first paint, so a dark-theme user never sees a frame
+of the light palette.
 
 Typography is Hanken Grotesk for text and JetBrains Mono for metadata labels. Both fonts
 are self-hosted rather than loaded from a CDN. Icons come from Material Symbols as
