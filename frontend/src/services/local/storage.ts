@@ -38,11 +38,39 @@ export function clone<T>(value: T): T {
   return structuredClone(value)
 }
 
-function read<T>(key: string, fallback: T): T {
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function hasStrings(value: unknown, fields: readonly string[]): value is Record<string, unknown> {
+  return isRecord(value) && fields.every((field) => typeof value[field] === 'string')
+}
+
+function isStoredUser(value: unknown): value is StoredUser {
+  return hasStrings(value, ['id', 'name', 'email', 'createdAt', 'passwordHash', 'passwordSalt'])
+}
+
+function isNote(value: unknown): value is Note {
+  return (
+    hasStrings(value, ['id', 'userId', 'title', 'content', 'status', 'createdAt', 'updatedAt']) &&
+    typeof value.isPinned === 'boolean' &&
+    typeof value.isFavourite === 'boolean'
+  )
+}
+
+/**
+ * `isValid` is the point of this function, not decoration. Parsing tells you the
+ * text was JSON, nothing about its shape: a hand-edited `aether.users` holding a
+ * string sails through the cast and throws on the first `.some()` instead. A
+ * payload that does not match is rejected whole rather than per record, which is
+ * what the HTTP adapter will do with a response body it cannot trust.
+ */
+function read<T>(key: string, fallback: T, isValid: (value: unknown) => value is T): T {
   const raw = localStorage.getItem(key)
   if (raw === null) return fallback
   try {
-    return JSON.parse(raw) as T
+    const parsed: unknown = JSON.parse(raw)
+    return isValid(parsed) ? parsed : fallback
   } catch {
     // A half-written or hand-edited entry should not brick the app on load.
     return fallback
@@ -54,7 +82,11 @@ function write(key: string, value: unknown): void {
 }
 
 export function readUsers(): StoredUser[] {
-  return read<StoredUser[]>(KEYS.users, [])
+  return read<StoredUser[]>(
+    KEYS.users,
+    [],
+    (value): value is StoredUser[] => Array.isArray(value) && value.every(isStoredUser),
+  )
 }
 
 export function writeUsers(users: StoredUser[]): void {
@@ -62,7 +94,11 @@ export function writeUsers(users: StoredUser[]): void {
 }
 
 export function readNotes(): Note[] {
-  return read<Note[]>(KEYS.notes, [])
+  return read<Note[]>(
+    KEYS.notes,
+    [],
+    (value): value is Note[] => Array.isArray(value) && value.every(isNote),
+  )
 }
 
 export function writeNotes(notes: Note[]): void {
@@ -70,7 +106,11 @@ export function writeNotes(notes: Note[]): void {
 }
 
 export function readSessionUserId(): string | null {
-  return read<string | null>(KEYS.session, null)
+  return read<string | null>(
+    KEYS.session,
+    null,
+    (value): value is string | null => value === null || typeof value === 'string',
+  )
 }
 
 export function writeSessionUserId(userId: string): void {

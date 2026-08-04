@@ -43,20 +43,26 @@ export function useNotes(query: NoteQuery = {}) {
     void refresh()
   }, [refresh])
 
+  // The reload below goes through this rather than the captured `refresh`. A
+  // query that changes while a mutation is in flight would otherwise reload
+  // the query the user has already left, and that reload — being the later of
+  // the two — is the one whose results reach the screen.
+  const latestRefresh = useRef(refresh)
+  useEffect(() => {
+    latestRefresh.current = refresh
+  }, [refresh])
+
   /*
    * Mutations reload the list on success and let failures propagate, so a page
    * can show a Toast. They deliberately do not set `error` — that drives the
    * list's own empty/error state, and a failed rename should not blank out
    * notes that are still on screen.
    */
-  const mutate = useCallback(
-    async <T>(operation: Promise<T>): Promise<T> => {
-      const result = await operation
-      await refresh()
-      return result
-    },
-    [refresh],
-  )
+  const mutate = useCallback(async <T>(operation: Promise<T>): Promise<T> => {
+    const result = await operation
+    await latestRefresh.current()
+    return result
+  }, [])
 
   const create = useCallback(
     (input: NoteInput) => mutate(notesService.create(input)),
