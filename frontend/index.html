@@ -6,6 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="A private, minimal space for your notes." />
     <title>Aether Notes</title>
+    <!--
+      Runs before the stylesheet paints so a dark-theme user never sees a frame
+      of the light palette. React cannot do this: by the time the bundle has
+      parsed, the first paint has already happened.
+    -->
+    <script>
+      ;(function () {
+        var stored = localStorage.getItem('aether.theme')
+        var dark = stored
+          ? stored === 'dark'
+          : window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (dark) document.documentElement.classList.add('dark')
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
