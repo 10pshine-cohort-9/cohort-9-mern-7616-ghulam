@@ -4,6 +4,7 @@ import CheckCircle from '@material-symbols/svg-400/outlined/check_circle.svg?rea
 import Close from '@material-symbols/svg-400/outlined/close.svg?react'
 import Cloud from '@material-symbols/svg-400/outlined/cloud.svg?react'
 import DarkMode from '@material-symbols/svg-400/outlined/dark_mode.svg?react'
+import Dashboard from '@material-symbols/svg-400/outlined/dashboard.svg?react'
 import Delete from '@material-symbols/svg-400/outlined/delete.svg?react'
 import Draw from '@material-symbols/svg-400/outlined/draw.svg?react'
 import Edit from '@material-symbols/svg-400/outlined/edit.svg?react'
@@ -17,6 +18,7 @@ import KeepOff from '@material-symbols/svg-400/outlined/keep_off.svg?react'
 import LightMode from '@material-symbols/svg-400/outlined/light_mode.svg?react'
 import Link from '@material-symbols/svg-400/outlined/link.svg?react'
 import Logout from '@material-symbols/svg-400/outlined/logout.svg?react'
+import Menu from '@material-symbols/svg-400/outlined/menu.svg?react'
 import MoreHoriz from '@material-symbols/svg-400/outlined/more_horiz.svg?react'
 import ProgressActivity from '@material-symbols/svg-400/outlined/progress_activity.svg?react'
 import Search from '@material-symbols/svg-400/outlined/search.svg?react'
@@ -40,6 +42,7 @@ const ICONS = {
   close: Close,
   cloud: Cloud,
   dark_mode: DarkMode,
+  dashboard: Dashboard,
   delete: Delete,
   draw: Draw,
   edit: Edit,
@@ -51,6 +54,7 @@ const ICONS = {
   light_mode: LightMode,
   link: Link,
   logout: Logout,
+  menu: Menu,
   more_horiz: MoreHoriz,
   pin: Keep,
   unpin: KeepOff,

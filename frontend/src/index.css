@@ -258,6 +258,10 @@
   animation: dialog-in 200ms ease-out;
 }
 
+@utility drawer-in {
+  animation: drawer-in 200ms ease-out;
+}
+
 @keyframes shimmer {
   0% {
     background-position: 200% 0;
@@ -279,5 +283,11 @@
   from {
     opacity: 0;
     transform: translateY(0.5rem) scale(0.98);
+  }
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
   }
 }
