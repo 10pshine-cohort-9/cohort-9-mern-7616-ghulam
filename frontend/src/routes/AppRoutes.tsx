@@ -1,6 +1,8 @@
 import { Route, Routes } from 'react-router-dom'
 import { AppShell } from '../components/layout/AppShell'
 import { NotFound } from '../pages/NotFound'
+import { SignIn } from '../pages/SignIn'
+import { SignUp } from '../pages/SignUp'
 import { ProtectedRoute } from './ProtectedRoute'
 
 /*
@@ -16,8 +18,8 @@ function Placeholder({ title }: { title: string }) {
 export function AppRoutes() {
   return (
     <Routes>
-      <Route element={<Placeholder title="Sign in" />} path="/signin" />
-      <Route element={<Placeholder title="Sign up" />} path="/signup" />
+      <Route element={<SignIn />} path="/signin" />
+      <Route element={<SignUp />} path="/signup" />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppShell />}>

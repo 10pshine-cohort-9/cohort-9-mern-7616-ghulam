@@ -17,6 +17,7 @@ import Keep from '@material-symbols/svg-400/outlined/keep.svg?react'
 import KeepOff from '@material-symbols/svg-400/outlined/keep_off.svg?react'
 import LightMode from '@material-symbols/svg-400/outlined/light_mode.svg?react'
 import Link from '@material-symbols/svg-400/outlined/link.svg?react'
+import Lock from '@material-symbols/svg-400/outlined/lock.svg?react'
 import Logout from '@material-symbols/svg-400/outlined/logout.svg?react'
 import Menu from '@material-symbols/svg-400/outlined/menu.svg?react'
 import MoreHoriz from '@material-symbols/svg-400/outlined/more_horiz.svg?react'
@@ -53,6 +54,7 @@ const ICONS = {
   format_underlined: FormatUnderlined,
   light_mode: LightMode,
   link: Link,
+  lock: Lock,
   logout: Logout,
   menu: Menu,
   more_horiz: MoreHoriz,
