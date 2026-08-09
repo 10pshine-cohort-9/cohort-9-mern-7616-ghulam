@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import { AppShell } from '../components/layout/AppShell'
+import { Dashboard } from '../pages/Dashboard'
 import { NotFound } from '../pages/NotFound'
 import { SignIn } from '../pages/SignIn'
 import { SignUp } from '../pages/SignUp'
@@ -23,7 +24,7 @@ export function AppRoutes() {
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppShell />}>
-          <Route element={<Placeholder title="Dashboard" />} index />
+          <Route element={<Dashboard />} index />
           <Route element={<Placeholder title="Favourites" />} path="favourites" />
           <Route element={<Placeholder title="Archived" />} path="archived" />
           <Route element={<Placeholder title="Trash" />} path="trash" />

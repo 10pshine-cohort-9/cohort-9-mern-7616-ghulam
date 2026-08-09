@@ -58,11 +58,16 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         all times, and without this it would swallow clicks on whatever sits
         underneath even with no toast showing. Each toast opts back in.
 
+        Which is exactly why it clears the dashboard's floating create button
+        from `md` up — both are anchored bottom-right, and a toast landed on top
+        of it and ate the click for the five seconds it was showing. The button
+        only exists from `md`, so the offset starts there too.
+
         The entrance needs no reduced-motion branch — `toast-in` is finite, so
         the global rule in index.css collapsing it to 0.01ms is the correct
         outcome rather than the flicker an infinite animation would give.
       */}
-      <div className="pointer-events-none fixed right-6 bottom-6 z-50 flex w-[min(24rem,calc(100vw-3rem))] flex-col gap-3">
+      <div className="pointer-events-none fixed right-6 bottom-6 z-50 flex w-[min(24rem,calc(100vw-3rem))] flex-col gap-3 md:bottom-32">
         {toasts.map((toast) => (
           <div className="pointer-events-auto" key={toast.id}>
             <Toast
