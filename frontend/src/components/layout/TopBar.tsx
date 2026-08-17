@@ -10,12 +10,6 @@ export function TopBar({ onOpenNav }: TopBarProps) {
   const navigate = useNavigate()
   const query = params.get('q') ?? ''
 
-  /*
-   * The query lives in the URL rather than in component state so the list
-   * views can read it without the shell having to own their filtering, and so
-   * a search survives a refresh. `replace` keeps a ten-character term from
-   * leaving ten entries between the user and the Back button.
-   */
   function handleSearch(value: string) {
     const next = new URLSearchParams(params)
     if (value) next.set('q', value)
@@ -49,8 +43,6 @@ export function TopBar({ onOpenNav }: TopBarProps) {
 
       <Button className="shrink-0" onClick={() => navigate('/notes/new')} size="sm">
         <Icon name="add" size="sm" />
-        {/* `sr-only` rather than `hidden`: the narrow layout shows an icon
-            alone, but the button keeps its accessible name either way. */}
         <span className="sr-only sm:not-sr-only">New note</span>
       </Button>
     </header>

@@ -26,26 +26,16 @@ import Logout from '@material-symbols/svg-400/outlined/logout.svg?react'
 import Menu from '@material-symbols/svg-400/outlined/menu.svg?react'
 import MoreHoriz from '@material-symbols/svg-400/outlined/more_horiz.svg?react'
 import ProgressActivity from '@material-symbols/svg-400/outlined/progress_activity.svg?react'
+import Redo from '@material-symbols/svg-400/outlined/redo.svg?react'
 import RestoreFromTrash from '@material-symbols/svg-400/outlined/restore_from_trash.svg?react'
 import Search from '@material-symbols/svg-400/outlined/search.svg?react'
 import Settings from '@material-symbols/svg-400/outlined/settings.svg?react'
 import Star from '@material-symbols/svg-400/outlined/star.svg?react'
 import StarFill from '@material-symbols/svg-400/outlined/star-fill.svg?react'
+import Undo from '@material-symbols/svg-400/outlined/undo.svg?react'
 import Warning from '@material-symbols/svg-400/outlined/warning.svg?react'
 import { cn } from '../../lib/cn'
 
-/**
- * The app's entire icon set. Routing every glyph through one registry is what
- * keeps this to a single icon system, and a `keyof` name means a typo is a
- * compile error rather than a silently blank space.
- *
- * Keys are semantic where the upstream file name is not: Material Symbols calls
- * a pin `keep`, and there is no `push_pin` or `cloud_queue` in this package.
- *
- * The `_filled` pair carries the mockups' `FILL 1` variation for a toggle that
- * is on. Colour alone would carry it in light mode and vanish in dark, where
- * the accent and the quiet foreground sit far closer together.
- */
 const ICONS = {
   add: Add,
   archive: Archive,
@@ -74,12 +64,14 @@ const ICONS = {
   pin: Keep,
   pin_filled: KeepFill,
   unpin: KeepOff,
+  redo: Redo,
   restore: RestoreFromTrash,
   spinner: ProgressActivity,
   search: Search,
   settings: Settings,
   star: Star,
   star_filled: StarFill,
+  undo: Undo,
   warning: Warning,
 } as const
 
@@ -102,7 +94,6 @@ interface IconProps {
 
 export function Icon({ name, size = 'md', className }: IconProps) {
   const Glyph = ICONS[name]
-  // svgr runs with icon:true and fill:currentColor, so the glyph is 1em square
-  // and inherits the surrounding text colour — sizing is a font-size concern.
   return <Glyph aria-hidden="true" className={cn('shrink-0', SIZES[size], className)} />
 }
+

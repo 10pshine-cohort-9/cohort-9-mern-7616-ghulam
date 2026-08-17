@@ -14,14 +14,11 @@ const NAV_ITEMS = [
 
 const ROW =
   'flex items-center gap-3 rounded-lg px-4 py-3 text-body-md ' +
-  // Named properties rather than `transition-all`, which would fade the focus
-  // ring in over 200ms. See Button.
   'transition-[background-color,color] duration-200 ease-out ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
 
 const QUIET_ROW = 'text-on-surface-variant hover:bg-secondary/10 hover:text-primary'
 
-/** Two letters at most: "Ghulam Mujtaba" reads GM, "Ada" reads A. */
 function initials(name: string): string {
   return name
     .trim()
@@ -33,7 +30,6 @@ function initials(name: string): string {
 
 interface SidebarProps {
   className?: string
-  /** Lets the mobile drawer close itself once a destination is chosen. */
   onNavigate?: () => void
 }
 
@@ -41,8 +37,6 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
   const { user, logout } = useAuth()
   const { notify } = useToast()
 
-  // Unreachable in practice — the shell only mounts inside ProtectedRoute — but
-  // it narrows the type without a non-null assertion on every field below.
   if (user === null) return null
 
   async function handleLogout() {
@@ -60,8 +54,6 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
         className,
       )}
     >
-      {/* Not an <h1>: this repeats on every screen, and the heading a page
-          announces should be that page's own. */}
       <div className="mb-stack-md px-4">
         <p className="text-headline-md text-primary">Aether Notes</p>
         <p className="font-mono text-label-caps text-muted-green">Minimal Luxury</p>
@@ -78,8 +70,6 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
                   : QUIET_ROW,
               )
             }
-            // Without `end` the index route matches every path below it and
-            // Dashboard would stay highlighted on Favourites, Archived and Trash.
             end={item.to === '/'}
             key={item.to}
             onClick={onNavigate}
@@ -92,8 +82,6 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
       </nav>
 
       <div className="mt-auto space-y-1 border-t border-glass-stroke pt-stack-sm">
-        {/* The identity row gets the full width: sharing it with the theme
-            toggle left roughly 88px for a name, which truncated most of them. */}
         <NavLink
           className={({ isActive }) =>
             cn(ROW, 'min-w-0', isActive ? 'bg-secondary-container' : QUIET_ROW)
