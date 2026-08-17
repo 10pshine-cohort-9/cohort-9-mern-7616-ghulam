@@ -15,6 +15,7 @@ import FormatBold from '@material-symbols/svg-400/outlined/format_bold.svg?react
 import FormatItalic from '@material-symbols/svg-400/outlined/format_italic.svg?react'
 import FormatListBulleted from '@material-symbols/svg-400/outlined/format_list_bulleted.svg?react'
 import FormatListNumbered from '@material-symbols/svg-400/outlined/format_list_numbered.svg?react'
+import FormatStrikethrough from '@material-symbols/svg-400/outlined/format_strikethrough.svg?react'
 import FormatUnderlined from '@material-symbols/svg-400/outlined/format_underlined.svg?react'
 import Keep from '@material-symbols/svg-400/outlined/keep.svg?react'
 import KeepFill from '@material-symbols/svg-400/outlined/keep-fill.svg?react'
@@ -54,6 +55,7 @@ const ICONS = {
   format_italic: FormatItalic,
   format_list_bulleted: FormatListBulleted,
   format_list_numbered: FormatListNumbered,
+  format_strikethrough: FormatStrikethrough,
   format_underlined: FormatUnderlined,
   light_mode: LightMode,
   link: Link,
@@ -96,4 +98,3 @@ export function Icon({ name, size = 'md', className }: IconProps) {
   const Glyph = ICONS[name]
   return <Glyph aria-hidden="true" className={cn('shrink-0', SIZES[size], className)} />
 }
-

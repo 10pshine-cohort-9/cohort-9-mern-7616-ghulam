@@ -10,12 +10,15 @@ export function SearchField() {
   const debouncedTerm = useDebouncedValue(term, 250)
 
   useEffect(() => {
-    setTerm(searchParams.get('q') || '')
-  }, [searchParams])
+    const urlQ = searchParams.get('q') || ''
+    if (urlQ !== term.trim() && urlQ !== term) {
+      setTerm(urlQ)
+    }
+  }, [searchParams, term])
 
   useEffect(() => {
     const currentQ = searchParams.get('q') || ''
-    if (debouncedTerm === currentQ) return
+    if (debouncedTerm.trim() === currentQ) return
 
     setSearchParams(
       (prev) => {

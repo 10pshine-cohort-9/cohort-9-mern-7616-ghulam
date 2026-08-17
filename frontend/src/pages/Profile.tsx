@@ -1,19 +1,20 @@
+import type { ReactElement } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { useNotes } from '../hooks/useNotes'
-import { Button, Icon } from '../components/ui'
+import { Button, Icon, Skeleton } from '../components/ui'
 
-export function Profile() {
+export function Profile(): ReactElement | null {
   const { user, logout } = useAuth()
   const { theme, toggle: toggleTheme } = useTheme()
 
-  const { notes: activeNotes } = useNotes({ status: 'active' })
-  const { notes: archivedNotes } = useNotes({ status: 'archived' })
-  const { notes: trashedNotes } = useNotes({ status: 'trashed' })
+  const { notes: activeNotes, isLoading: loadingActive, error: errorActive } = useNotes({ status: 'active' })
+  const { notes: archivedNotes, isLoading: loadingArchived, error: errorArchived } = useNotes({ status: 'archived' })
+  const { notes: trashedNotes, isLoading: loadingTrashed, error: errorTrashed } = useNotes({ status: 'trashed' })
 
   if (!user) return null
 
-  const getInitials = (name: string) => {
+  const getInitials = (name: string): string => {
     return name
       .split(' ')
       .map((part) => part[0])
@@ -28,6 +29,8 @@ export function Profile() {
     year: 'numeric',
   })
 
+  const isLoadingStats = loadingActive || loadingArchived || loadingTrashed
+  const statsError = errorActive || errorArchived || errorTrashed
   const totalNotesCount = activeNotes.length + archivedNotes.length + trashedNotes.length
 
   return (
@@ -58,24 +61,37 @@ export function Profile() {
 
       <div className="space-y-4">
         <h3 className="text-headline-md font-semibold text-on-surface">Workspace Statistics</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="glass-panel rounded-xl p-4 text-center">
-            <span className="block text-label-caps text-muted-green font-mono uppercase">Total</span>
-            <span className="text-headline-lg font-bold text-primary">{totalNotesCount}</span>
+        {isLoadingStats ? (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Skeleton className="h-20 rounded-xl" />
+            <Skeleton className="h-20 rounded-xl" />
+            <Skeleton className="h-20 rounded-xl" />
+            <Skeleton className="h-20 rounded-xl" />
           </div>
-          <div className="glass-panel rounded-xl p-4 text-center">
-            <span className="block text-label-caps text-muted-green font-mono uppercase">Active</span>
-            <span className="text-headline-lg font-bold text-on-surface">{activeNotes.length}</span>
+        ) : statsError ? (
+          <div className="glass-panel rounded-xl p-4 text-center text-error">
+            Failed to load statistics.
           </div>
-          <div className="glass-panel rounded-xl p-4 text-center">
-            <span className="block text-label-caps text-muted-green font-mono uppercase">Archived</span>
-            <span className="text-headline-lg font-bold text-on-surface-variant">{archivedNotes.length}</span>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="glass-panel rounded-xl p-4 text-center">
+              <span className="block text-label-caps text-muted-green font-mono uppercase">Total</span>
+              <span className="text-headline-lg font-bold text-primary">{totalNotesCount}</span>
+            </div>
+            <div className="glass-panel rounded-xl p-4 text-center">
+              <span className="block text-label-caps text-muted-green font-mono uppercase">Active</span>
+              <span className="text-headline-lg font-bold text-on-surface">{activeNotes.length}</span>
+            </div>
+            <div className="glass-panel rounded-xl p-4 text-center">
+              <span className="block text-label-caps text-muted-green font-mono uppercase">Archived</span>
+              <span className="text-headline-lg font-bold text-on-surface-variant">{archivedNotes.length}</span>
+            </div>
+            <div className="glass-panel rounded-xl p-4 text-center">
+              <span className="block text-label-caps text-muted-green font-mono uppercase">Trashed</span>
+              <span className="text-headline-lg font-bold text-error">{trashedNotes.length}</span>
+            </div>
           </div>
-          <div className="glass-panel rounded-xl p-4 text-center">
-            <span className="block text-label-caps text-muted-green font-mono uppercase">Trashed</span>
-            <span className="text-headline-lg font-bold text-error">{trashedNotes.length}</span>
-          </div>
-        </div>
+        )}
       </div>
 
       <div className="glass-panel rounded-2xl p-stack-md space-y-4">

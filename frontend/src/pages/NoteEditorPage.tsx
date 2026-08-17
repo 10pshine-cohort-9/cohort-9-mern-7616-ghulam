@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { RichTextEditor } from '../components/editor/RichTextEditor'
 import { Button, ConfirmDialog, EmptyState, Skeleton } from '../components/ui'
@@ -19,6 +19,7 @@ export function NoteEditorPage() {
   const [isLoading, setIsLoading] = useState(!isNew)
   const [isSaving, setIsSaving] = useState(false)
   const [notFound, setNotFound] = useState(false)
+  const isSavedRef = useRef(false)
 
   useEffect(() => {
     if (isNew) {
@@ -55,9 +56,11 @@ export function NoteEditorPage() {
     }
   }, [id, isNew])
 
-  const hasUnsavedChanges = isNew
-    ? Boolean(title.trim() || content.trim())
-    : Boolean(initialNote && (title !== initialNote.title || content !== initialNote.content))
+  const hasUnsavedChanges =
+    !isSavedRef.current &&
+    (isNew
+      ? Boolean(title.trim() || content.trim())
+      : Boolean(initialNote && (title !== initialNote.title || content !== initialNote.content)))
 
   const blocker = useUnsavedChanges(hasUnsavedChanges)
 
@@ -72,6 +75,7 @@ export function NoteEditorPage() {
         await notesService.update(id, { title: finalTitle, content })
         notify('success', 'Note updated successfully')
       }
+      isSavedRef.current = true
       navigate('/', { replace: true })
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to save note'
@@ -82,13 +86,7 @@ export function NoteEditorPage() {
   }
 
   const handleCancel = () => {
-    if (hasUnsavedChanges) {
-      if (window.confirm('Discard unsaved changes?')) {
-        navigate(-1)
-      }
-    } else {
-      navigate(-1)
-    }
+    navigate(-1)
   }
 
   if (isLoading) {
@@ -122,6 +120,7 @@ export function NoteEditorPage() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Untitled Note"
+          aria-label="Note title"
           className="w-full text-headline-lg font-bold bg-transparent text-on-surface placeholder:text-muted-green focus:outline-none"
         />
         <div className="flex items-center gap-3 shrink-0">

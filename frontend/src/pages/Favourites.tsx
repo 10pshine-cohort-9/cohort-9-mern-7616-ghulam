@@ -16,7 +16,7 @@ export function Favourites() {
   const search = searchParams.get('q') || ''
   const [sort, setSort] = useState<NoteSort>('updated-desc')
 
-  const { notes, isLoading, setPinned, setFavourite, setStatus } = useNotes({
+  const { notes, isLoading, error, setPinned, setFavourite, setStatus } = useNotes({
     status: 'active',
     favouritesOnly: true,
     search,
@@ -58,7 +58,13 @@ export function Favourites() {
         <NoteFilters value={sort} onChange={setSort} />
       </div>
 
-      {notes.length === 0 ? (
+      {error ? (
+        <EmptyState
+          icon="warning"
+          title="Error Loading Favourites"
+          description={error || 'Failed to fetch favourite notes.'}
+        />
+      ) : notes.length === 0 ? (
         <EmptyState
           icon="star"
           title={search ? `No favourite notes matching "${search}"` : 'No favourited notes'}

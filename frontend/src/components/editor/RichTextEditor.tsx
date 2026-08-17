@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { EditorToolbar } from './EditorToolbar'
@@ -17,6 +18,7 @@ export function RichTextEditor({ value, onChange, readOnly = false }: RichTextEd
     ],
     content: value,
     editable: !readOnly,
+    shouldRerenderOnTransaction: true,
     onUpdate: ({ editor: currentEditor }) => {
       onChange(currentEditor.getHTML())
     },
@@ -27,6 +29,12 @@ export function RichTextEditor({ value, onChange, readOnly = false }: RichTextEd
       },
     },
   })
+
+  useEffect(() => {
+    if (editor && value !== editor.getHTML() && !editor.isFocused) {
+      editor.commands.setContent(value)
+    }
+  }, [editor, value])
 
   if (!editor) return null
 

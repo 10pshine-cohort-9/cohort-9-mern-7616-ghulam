@@ -355,5 +355,29 @@
   & s, & del {
     text-decoration: line-through;
   }
+
+  & pre {
+    background-color: var(--color-surface-container);
+    padding: 1rem;
+    border-radius: 0.75rem;
+    font-family: var(--font-mono);
+    overflow-x: auto;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  & code {
+    font-family: var(--font-mono);
+    font-size: var(--text-label-sm);
+    background-color: var(--color-surface-container);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+  }
+
+  & hr {
+    border-color: var(--color-glass-stroke);
+    margin: 1.5rem 0;
+  }
 }
+
 

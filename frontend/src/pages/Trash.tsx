@@ -7,6 +7,7 @@ import type { NoteCardAction } from '../components/notes/NoteCard'
 import { Button, ConfirmDialog, EmptyState } from '../components/ui'
 import { useNotes } from '../hooks/useNotes'
 import { useToast } from '../context/ToastContext'
+import { notesService } from '../services'
 import type { Note, NoteSort } from '../types'
 
 export function Trash() {
@@ -16,7 +17,7 @@ export function Trash() {
   const search = searchParams.get('q') || ''
   const [sort, setSort] = useState<NoteSort>('updated-desc')
 
-  const { notes, isLoading, setStatus, remove } = useNotes({
+  const { notes, isLoading, setStatus, remove, refresh } = useNotes({
     status: 'trashed',
     search,
     sort,
@@ -60,9 +61,11 @@ export function Trash() {
   const handleConfirmEmptyTrash = async () => {
     setIsDeleting(true)
     try {
-      for (const note of notes) {
-        await remove(note.id)
+      const allTrashedNotes = await notesService.list({ status: 'trashed' })
+      for (const note of allTrashedNotes) {
+        await notesService.remove(note.id)
       }
+      await refresh()
       notify('success', 'Trash emptied')
       setIsEmptyTrashOpen(false)
     } catch (err) {
@@ -133,7 +136,7 @@ export function Trash() {
         <ConfirmDialog
           open={true}
           title="Empty Trash"
-          description={`Are you sure you want to permanently delete all ${notes.length} items in your trash? This action cannot be undone.`}
+          description="Are you sure you want to permanently delete all items in your trash? This action cannot be undone."
           confirmLabel={isDeleting ? 'Deleting...' : 'Empty Trash'}
           onConfirm={handleConfirmEmptyTrash}
           onCancel={() => setIsEmptyTrashOpen(false)}

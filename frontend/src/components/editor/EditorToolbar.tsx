@@ -21,10 +21,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
     <div className="flex flex-wrap items-center gap-1 p-2 mb-4 border border-glass-stroke rounded-xl bg-surface-container-low glass-panel">
       <button
         type="button"
-        onMouseDown={(e) => {
-          e.preventDefault()
-          editor.chain().focus().toggleBold().run()
-        }}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => editor.chain().focus().toggleBold().run()}
         className={`p-2 rounded-lg transition-colors ${
           editor.isActive('bold')
             ? 'bg-secondary-container text-on-secondary-container'
@@ -37,10 +35,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
 
       <button
         type="button"
-        onMouseDown={(e) => {
-          e.preventDefault()
-          editor.chain().focus().toggleItalic().run()
-        }}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => editor.chain().focus().toggleItalic().run()}
         className={`p-2 rounded-lg transition-colors ${
           editor.isActive('italic')
             ? 'bg-secondary-container text-on-secondary-container'
@@ -53,10 +49,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
 
       <button
         type="button"
-        onMouseDown={(e) => {
-          e.preventDefault()
-          editor.chain().focus().toggleStrike().run()
-        }}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => editor.chain().focus().toggleStrike().run()}
         className={`p-2 rounded-lg transition-colors ${
           editor.isActive('strike')
             ? 'bg-secondary-container text-on-secondary-container'
@@ -64,17 +58,15 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         }`}
         aria-label="Strikethrough"
       >
-        <Icon name="format_underlined" size="sm" />
+        <Icon name="format_strikethrough" size="sm" />
       </button>
 
       <div className="w-px h-6 mx-1 bg-outline-variant/30" />
 
       <button
         type="button"
-        onMouseDown={(e) => {
-          e.preventDefault()
-          editor.chain().focus().toggleHeading({ level: 1 }).run()
-        }}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         className={`px-2 py-1 rounded-lg font-bold text-xs transition-colors ${
           editor.isActive('heading', { level: 1 })
             ? 'bg-secondary-container text-on-secondary-container'
@@ -87,10 +79,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
 
       <button
         type="button"
-        onMouseDown={(e) => {
-          e.preventDefault()
-          editor.chain().focus().toggleHeading({ level: 2 }).run()
-        }}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         className={`px-2 py-1 rounded-lg font-bold text-xs transition-colors ${
           editor.isActive('heading', { level: 2 })
             ? 'bg-secondary-container text-on-secondary-container'
@@ -103,10 +93,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
 
       <button
         type="button"
-        onMouseDown={(e) => {
-          e.preventDefault()
-          editor.chain().focus().toggleHeading({ level: 3 }).run()
-        }}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         className={`px-2 py-1 rounded-lg font-bold text-xs transition-colors ${
           editor.isActive('heading', { level: 3 })
             ? 'bg-secondary-container text-on-secondary-container'
@@ -121,10 +109,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
 
       <button
         type="button"
-        onMouseDown={(e) => {
-          e.preventDefault()
-          editor.chain().focus().toggleBulletList().run()
-        }}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={`p-2 rounded-lg transition-colors ${
           editor.isActive('bulletList')
             ? 'bg-secondary-container text-on-secondary-container'
@@ -137,10 +123,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
 
       <button
         type="button"
-        onMouseDown={(e) => {
-          e.preventDefault()
-          editor.chain().focus().toggleOrderedList().run()
-        }}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={`p-2 rounded-lg transition-colors ${
           editor.isActive('orderedList')
             ? 'bg-secondary-container text-on-secondary-container'
@@ -153,10 +137,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
 
       <button
         type="button"
-        onMouseDown={(e) => {
-          e.preventDefault()
-          setLink()
-        }}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => setLink()}
         className={`p-2 rounded-lg transition-colors ${
           editor.isActive('link')
             ? 'bg-secondary-container text-on-secondary-container'
@@ -171,10 +153,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
 
       <button
         type="button"
-        onMouseDown={(e) => {
-          e.preventDefault()
-          editor.chain().focus().undo().run()
-        }}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => editor.chain().focus().undo().run()}
         disabled={!editor.can().undo()}
         className="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container disabled:opacity-40 transition-colors"
         aria-label="Undo"
@@ -184,10 +164,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
 
       <button
         type="button"
-        onMouseDown={(e) => {
-          e.preventDefault()
-          editor.chain().focus().redo().run()
-        }}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => editor.chain().focus().redo().run()}
         disabled={!editor.can().redo()}
         className="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container disabled:opacity-40 transition-colors"
         aria-label="Redo"

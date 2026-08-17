@@ -14,12 +14,13 @@ const SORT_OPTIONS: { label: string; value: NoteSort }[] = [
 
 export function NoteFilters({ value, onChange }: NoteFiltersProps) {
   return (
-    <div className="flex items-center gap-2 overflow-x-auto py-2">
+    <div role="group" aria-label="Sort options" className="flex items-center gap-2 overflow-x-auto py-2">
       <span className="text-label-caps text-muted-green font-mono uppercase tracking-wider text-xs">Sort:</span>
       {SORT_OPTIONS.map((option) => (
         <button
           key={option.value}
           type="button"
+          aria-pressed={value === option.value}
           onClick={() => onChange(option.value)}
           className={`px-3 py-1.5 rounded-full text-label-sm font-medium transition-all ${
             value === option.value
