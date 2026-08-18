@@ -1,5 +1,7 @@
 import 'dotenv/config'
 
+const DURATION_SCALE = { ms: 1, s: 1000, m: 60_000, h: 3_600_000, d: 86_400_000 }
+
 function fail(message: string): never {
   process.stderr.write(`[config] ${message}\n`)
   process.exit(1)
@@ -26,6 +28,18 @@ function toPort(value: string): number {
   return parsed
 }
 
+function toDurationMs(name: string, value: string): number {
+  const match = /^(\d+)(ms|s|m|h|d)$/.exec(value)
+  if (match === null) {
+    return fail(`${name} must look like 30m, 24h or 7d, received "${value}".`)
+  }
+  const milliseconds = Number(match[1]) * DURATION_SCALE[match[2] as keyof typeof DURATION_SCALE]
+  if (milliseconds <= 0) {
+    return fail(`${name} must be greater than zero, received "${value}".`)
+  }
+  return milliseconds
+}
+
 const nodeEnv = optional('NODE_ENV', 'development')
 
 export const env = {
@@ -35,4 +49,6 @@ export const env = {
   mongoUri: required('MONGODB_URI'),
   corsOrigin: optional('CORS_ORIGIN', 'http://localhost:5173'),
   logLevel: optional('LOG_LEVEL', 'info'),
+  jwtSecret: required('JWT_SECRET'),
+  jwtExpiresInMs: toDurationMs('JWT_EXPIRES_IN', optional('JWT_EXPIRES_IN', '7d')),
 }
