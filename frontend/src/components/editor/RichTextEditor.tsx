@@ -32,7 +32,7 @@ export function RichTextEditor({ value, onChange, readOnly = false }: RichTextEd
 
   useEffect(() => {
     if (editor && value !== editor.getHTML() && !editor.isFocused) {
-      editor.commands.setContent(value)
+      editor.commands.setContent(value, { emitUpdate: false })
     }
   }, [editor, value])
 

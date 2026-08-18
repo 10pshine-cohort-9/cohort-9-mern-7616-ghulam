@@ -59,11 +59,7 @@ export function Favourites() {
       </div>
 
       {error ? (
-        <EmptyState
-          icon="warning"
-          title="Error Loading Favourites"
-          description={error || 'Failed to fetch favourite notes.'}
-        />
+        <EmptyState icon="warning" title="Error Loading Favourites" description={error} />
       ) : notes.length === 0 ? (
         <EmptyState
           icon="star"

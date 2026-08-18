@@ -16,7 +16,7 @@ export function Archived() {
   const search = searchParams.get('q') || ''
   const [sort, setSort] = useState<NoteSort>('updated-desc')
 
-  const { notes, isLoading, setStatus } = useNotes({
+  const { notes, isLoading, error, setStatus } = useNotes({
     status: 'archived',
     search,
     sort,
@@ -53,7 +53,9 @@ export function Archived() {
         <NoteFilters value={sort} onChange={setSort} />
       </div>
 
-      {notes.length === 0 ? (
+      {error ? (
+        <EmptyState icon="warning" title="Error Loading Archive" description={error} />
+      ) : notes.length === 0 ? (
         <EmptyState
           icon="archive"
           title={search ? `No archived notes matching "${search}"` : 'No archive found'}

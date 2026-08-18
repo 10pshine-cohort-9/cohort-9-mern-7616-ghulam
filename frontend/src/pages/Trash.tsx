@@ -17,7 +17,7 @@ export function Trash() {
   const search = searchParams.get('q') || ''
   const [sort, setSort] = useState<NoteSort>('updated-desc')
 
-  const { notes, isLoading, setStatus, remove, refresh } = useNotes({
+  const { notes, isLoading, error, setStatus, remove, refresh } = useNotes({
     status: 'trashed',
     search,
     sort,
@@ -90,7 +90,7 @@ export function Trash() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          {notes.length > 0 && (
+          {!error && notes.length > 0 && (
             <Button
               variant="outline"
               onClick={() => setIsEmptyTrashOpen(true)}
@@ -103,7 +103,9 @@ export function Trash() {
         </div>
       </div>
 
-      {notes.length === 0 ? (
+      {error ? (
+        <EmptyState icon="warning" title="Error Loading Trash" description={error} />
+      ) : notes.length === 0 ? (
         <EmptyState
           icon="delete"
           title={search ? `No trashed notes matching "${search}"` : 'Trash is empty'}
