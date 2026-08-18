@@ -8,24 +8,25 @@ Built for the 10Pearls Cohort 9 MERN assignment.
 
 ## Status
 
-The frontend is being built first as a working prototype. It runs standalone against a
+The frontend was built first as a working prototype. It runs standalone against a
 local storage adapter, so the whole interface is usable before the API exists. The
 backend replaces that adapter behind the same interfaces, without the UI changing.
 
-The `/backend` folder does not exist yet.
+`/backend` now holds the Express server: configuration, logging, the MongoDB connection,
+the shared error handling, and a health route. The authentication and notes endpoints
+land on top of it, and the frontend keeps using the local adapter until they do.
 
 ## Tech stack
 
 Frontend is React 19 with TypeScript, built by Vite, and styled with Tailwind CSS v4.
-Rich-text editing will use TipTap, which is not installed yet. Backend will be Node and
-Express with TypeScript, over MongoDB via Mongoose, with JWT authentication and Pino
-logging.
+Rich-text editing uses TipTap. The backend is Node and Express 5 with TypeScript, over
+MongoDB via Mongoose, with Pino logging and JWT authentication to follow.
 
 ## Requirements
 
 - Node.js 20.19+ or 22.12+ (developed on 24)
 - npm 10 or newer
-- MongoDB running locally (backend only, not needed yet)
+- MongoDB running locally, listening on 27017
 
 ## Running the frontend
 
@@ -45,6 +46,32 @@ npm run lint      # oxlint
 npm run preview   # serve the production build locally
 ```
 
+## Running the backend
+
+```bash
+cd backend
+npm install
+cp .env.example .env
+npm run dev
+```
+
+The API starts on http://localhost:5000. `GET /api/health` reports process uptime and the
+MongoDB connection state, and is the quickest way to tell a configuration problem from a
+database problem. The server connects to MongoDB before it opens the port, so it exits
+rather than accepting requests it cannot serve.
+
+`.env` is ignored by git. `.env.example` lists every variable the server reads; copy it
+and adjust rather than inventing names.
+
+Other scripts:
+
+```bash
+npm run build      # compile TypeScript to dist/
+npm run start      # run the compiled server
+npm run lint       # oxlint
+npm run typecheck  # tsc --noEmit
+```
+
 ## Project structure
 
 ```text
@@ -61,6 +88,14 @@ frontend/
     services/           data access behind swappable adapters
     types/              shared domain types
     index.css           design tokens and base styles
+backend/
+  src/
+    config/             environment parsing and the database connection
+    controllers/        HTTP handling only: parse, delegate, respond
+    lib/                the logger, the typed error, framework-free helpers
+    middleware/         cross-cutting request handling
+    routes/             the route table
+    server.ts           connects, listens, shuts down cleanly
 ```
 
 More directories are added as features land. The layout follows the branching strategy's
