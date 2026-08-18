@@ -29,3 +29,26 @@ export function optionalString(
 ): string | undefined {
   return read(body, field) === undefined ? undefined : requireString(body, field, rules)
 }
+
+export function requireBoolean(body: unknown, field: string, label: string): boolean {
+  const value = read(body, field)
+
+  if (typeof value !== 'boolean') {
+    throw new AppError(`${label} must be true or false.`, 400)
+  }
+  return value
+}
+
+export function requireOneOf<T extends string>(
+  body: unknown,
+  field: string,
+  allowed: readonly T[],
+  label: string,
+): T {
+  const value = read(body, field)
+
+  if (typeof value !== 'string' || !(allowed as readonly string[]).includes(value)) {
+    throw new AppError(`${label} must be one of: ${allowed.join(', ')}.`, 400)
+  }
+  return value as T
+}
