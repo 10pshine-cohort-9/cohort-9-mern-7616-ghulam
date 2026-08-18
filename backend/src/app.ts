@@ -8,6 +8,7 @@ import { logger } from './lib/logger.js'
 import { errorHandler, notFound } from './middleware/errors.js'
 import { authRouter } from './routes/auth.routes.js'
 import { healthRouter } from './routes/health.routes.js'
+import { notesRouter } from './routes/notes.routes.js'
 
 export function createApp(): Express {
   const app = express()
@@ -20,6 +21,7 @@ export function createApp(): Express {
 
   app.use('/api/health', healthRouter)
   app.use('/api/auth', authRouter)
+  app.use('/api/notes', notesRouter)
 
   app.use(notFound)
   app.use(errorHandler)
