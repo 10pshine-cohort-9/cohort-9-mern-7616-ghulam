@@ -1,19 +1,19 @@
-import { BrowserRouter } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { ToastProvider } from './context/ToastContext'
-import { AppRoutes } from './routes/AppRoutes'
+import { appRoutes } from './routes/AppRoutes'
+
+const router = createBrowserRouter(createRoutesFromElements(appRoutes))
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <AuthProvider>
-          <ToastProvider>
-            <AppRoutes />
-          </ToastProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <ThemeProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <RouterProvider router={router} />
+        </ToastProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
