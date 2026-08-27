@@ -8,6 +8,7 @@ import { getUserById, login, register } from '../services/auth.service.js'
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const MAX_NAME_LENGTH = 60
 const MIN_PASSWORD_LENGTH = 8
+const MAX_PASSWORD_BYTES = 72
 
 function readString(body: unknown, field: string): string {
   if (typeof body !== 'object' || body === null) return ''
@@ -44,6 +45,9 @@ function requirePassword(body: unknown): string {
   }
   if (password.length < MIN_PASSWORD_LENGTH) {
     throw new AppError(`Use at least ${MIN_PASSWORD_LENGTH} characters.`, 400)
+  }
+  if (Buffer.byteLength(password, 'utf8') > MAX_PASSWORD_BYTES) {
+    throw new AppError(`Use at most ${MAX_PASSWORD_BYTES} bytes.`, 400)
   }
   return password
 }
