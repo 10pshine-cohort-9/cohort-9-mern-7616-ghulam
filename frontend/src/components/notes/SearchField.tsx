@@ -1,30 +1,32 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
 import { Icon } from '../ui/Icon'
 
 export function SearchField() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const initialQuery = searchParams.get('q') || ''
-  const [term, setTerm] = useState(initialQuery)
+  const query = searchParams.get('q') || ''
+  const [term, setTerm] = useState(query)
   const debouncedTerm = useDebouncedValue(term, 250)
 
-  useEffect(() => {
-    const urlQ = searchParams.get('q') || ''
-    if (urlQ !== term.trim() && urlQ !== term) {
-      setTerm(urlQ)
-    }
-  }, [searchParams, term])
+  const lastQuery = useRef(query)
 
   useEffect(() => {
-    const currentQ = searchParams.get('q') || ''
-    if (debouncedTerm.trim() === currentQ) return
+    if (query === lastQuery.current) return
+    lastQuery.current = query
+    setTerm(query)
+  }, [query])
+
+  useEffect(() => {
+    const trimmed = debouncedTerm.trim()
+    if (trimmed === lastQuery.current) return
+    lastQuery.current = trimmed
 
     setSearchParams(
       (prev) => {
         const next = new URLSearchParams(prev)
-        if (debouncedTerm.trim()) {
-          next.set('q', debouncedTerm.trim())
+        if (trimmed) {
+          next.set('q', trimmed)
         } else {
           next.delete('q')
         }
@@ -32,7 +34,7 @@ export function SearchField() {
       },
       { replace: true }
     )
-  }, [debouncedTerm, searchParams, setSearchParams])
+  }, [debouncedTerm, setSearchParams])
 
   return (
     <div className="relative w-full max-w-md">
