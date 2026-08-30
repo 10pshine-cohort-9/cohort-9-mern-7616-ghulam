@@ -5,8 +5,7 @@ const config: Config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   roots: ['<rootDir>/src'],
   moduleNameMapper: {
-    '\\.svg(\\?react)?$': '<rootDir>/test/mocks.tsx',
-    '\\.(css|scss|less)$': '<rootDir>/test/styleMock.ts',
+    '\\.(svg(\\?react)?|css|scss|less)$': '<rootDir>/test/mocks.tsx',
   },
   transform: {
     '^.+\\.(t|j)sx?$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.test.json' }],
