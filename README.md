@@ -8,13 +8,14 @@ Built for the 10Pearls Cohort 9 MERN assignment.
 
 ## Status
 
-The frontend was built first as a working prototype. It runs standalone against a
-local storage adapter, so the whole interface is usable before the API exists. The
-backend replaces that adapter behind the same interfaces, without the UI changing.
+The frontend was built first as a working prototype. It ran standalone against a
+local storage adapter, so the whole interface was usable before the API existed. The
+backend then replaced that adapter behind the same interfaces, and no component or page
+changed in the swap.
 
-`/backend` now holds the Express server: configuration, logging, the MongoDB connection,
-the shared error handling, and a health route. The authentication and notes endpoints
-land on top of it, and the frontend keeps using the local adapter until they do.
+`/backend` holds the Express server: configuration, logging, the MongoDB connection, the
+shared error handling, a health route, and the authentication and notes endpoints. The
+local storage adapter has been removed — the app now talks to the API over HTTP.
 
 ## Tech stack
 
@@ -72,6 +73,76 @@ npm run lint       # oxlint
 npm run typecheck  # tsc --noEmit
 ```
 
+## Testing and code quality
+
+The backend is tested with Mocha and Chai. Service tests cover the rules that are invisible
+at the HTTP edge, and `supertest` route tests cover the controllers, the auth middleware and
+the error middleware. Every suite runs against an in-memory MongoDB, so no test touches a
+real database and the suites need no setup beyond `npm install`.
+
+```bash
+cd backend
+npm test            # 130 assertions
+npm run test:coverage
+```
+
+The frontend is tested with Jest and React Testing Library under jsdom, covering the
+helpers, the HTTP client and both service adapters, the interface primitives, the note
+components, the auth pages, the contexts, the route guard and the hooks, the four
+route-level list screens, the profile screen and the app shell.
+
+```bash
+cd frontend
+npm test            # 210 assertions
+npm run test:coverage
+```
+
+Both commands write `coverage/lcov.info` inside their own workspace. `coverage/` is ignored
+by git.
+
+### SonarQube
+
+`sonar-project.properties` at the repository root points a single analysis at both
+workspaces and reads both LCOV reports. Generate the coverage first, then scan — the
+scanner does not run the tests:
+
+```bash
+cd backend && npm run test:coverage && cd ..
+cd frontend && npm run test:coverage && cd ..
+npx sonar-scanner -Dsonar.host.url=http://localhost:9000 -Dsonar.token=<your-token>
+```
+
+`sonar.coverage.exclusions` covers the composition root, the database connection and the
+logger on the backend, and the Vite entry point and the TipTap editor components on the
+frontend. The editor is excluded because TipTap requires a real browser layout engine and
+cannot be driven in jsdom, not because it scored badly.
+
+`frontend/src` appears in both `sonar.sources` and `sonar.tests`, because the Jest suites sit
+in `__tests__` folders beside the code they cover. `sonar.test.inclusions` classifies those
+files as tests and `sonar.exclusions` removes them from the main sources, so the two sets stay
+disjoint — without that the scanner refuses to index a file twice and the analysis fails.
+
+#### Results of the first analysis
+
+| Metric | Value |
+|---|---|
+| Quality gate | Passed |
+| Coverage | 86.1% (89.1% line, 79.2% branch) |
+| Lines of code | 3,859 |
+| Vulnerabilities | 0 |
+| Security hotspots | 0 |
+| Duplication | 0.9% |
+| Code smells | 52 (maintainability A) |
+| Issues typed as bugs | 15 |
+
+The 15 bug-typed issues were each checked against the source and none is a defect. Thirteen are
+`css:S8776` "missing scoping root", raised on the nested `&` selectors inside the
+`@utility prose-aether` block in `index.css` — the analyzer does not recognise Tailwind v4's
+`@utility` at-rule as a scoping root. The remaining two are `typescript:S1082`, raised on the
+backdrop-click handlers of the two native `<dialog>` elements; both dismiss on Escape through
+the element's own `cancel` event, so the keyboard path exists and is simply not an
+`onKeyDown` on the same node. They are recorded here rather than silenced in configuration.
+
 ## Project structure
 
 ```text
@@ -88,14 +159,20 @@ frontend/
     services/           data access behind swappable adapters
     types/              shared domain types
     index.css           design tokens and base styles
+    **/__tests__/       Jest suites, beside the code they cover
+  test/                 shared test mocks
 backend/
   src/
     config/             environment parsing and the database connection
     controllers/        HTTP handling only: parse, delegate, respond
     lib/                the logger, the typed error, framework-free helpers
     middleware/         cross-cutting request handling
+    models/             the Mongoose schemas
     routes/             the route table
+    services/           the business rules, independent of HTTP
     server.ts           connects, listens, shuts down cleanly
+  test/                 Mocha suites and the in-memory database harness
+sonar-project.properties  one analysis across both workspaces
 ```
 
 More directories are added as features land. The layout follows the branching strategy's
