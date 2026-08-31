@@ -3,11 +3,6 @@ import type { ReactNode } from 'react'
 
 export type Theme = 'light' | 'dark'
 
-/*
- * The one localStorage key outside services/local/storage.ts. That module owns
- * the data the backend takes over in week 2 and is deleted with the adapter;
- * a theme choice is client-only and has to outlive it.
- */
 const STORAGE_KEY = 'aether.theme'
 const DARK_QUERY = '(prefers-color-scheme: dark)'
 

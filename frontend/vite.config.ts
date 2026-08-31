@@ -24,5 +24,11 @@ export default defineConfig({
     // in the README and the backend will proxy to it, so quiet drift would
     // break CORS in a way that is tedious to trace back to here.
     strictPort: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+    },
   },
 })
