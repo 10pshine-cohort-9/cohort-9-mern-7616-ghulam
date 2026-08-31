@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { AuthProvider } from '../../context/AuthContext'
 import { ThemeProvider } from '../../context/ThemeContext'
+import { ToastProvider } from '../../context/ToastContext'
 import type { Note, NoteQuery } from '../../types'
 import { Profile } from '../Profile'
 
@@ -59,9 +60,11 @@ function renderProfile() {
   return render(
     <MemoryRouter>
       <ThemeProvider>
-        <AuthProvider>
-          <Profile />
-        </AuthProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <Profile />
+          </AuthProvider>
+        </ToastProvider>
       </ThemeProvider>
     </MemoryRouter>,
   )
@@ -78,10 +81,13 @@ beforeEach(() => {
 describe('Profile', () => {
   it('renders nothing at all while there is no signed-in user', async () => {
     getCurrentUser.mockResolvedValue(null)
-    const { container } = renderProfile()
+    renderProfile()
 
     await waitFor(() => expect(getCurrentUser).toHaveBeenCalled())
-    expect(container).toBeEmptyDOMElement()
+    expect(
+      screen.queryByRole('heading', { name: 'Account Profile' }),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Sign Out/ })).not.toBeInTheDocument()
   })
 
   it('shows the account name and email', async () => {
@@ -149,5 +155,15 @@ describe('Profile', () => {
     await userEvent.click(await screen.findByRole('button', { name: /Sign Out/ }))
 
     await waitFor(() => expect(logout).toHaveBeenCalledTimes(1))
+  })
+
+  it('reports a failed sign-out instead of leaving the button silent', async () => {
+    serve({ active: 0, archived: 0, trashed: 0 })
+    logout.mockRejectedValue(new Error('Network unreachable'))
+    renderProfile()
+
+    await userEvent.click(await screen.findByRole('button', { name: /Sign Out/ }))
+
+    expect(await screen.findByText('Could not sign out')).toBeInTheDocument()
   })
 })

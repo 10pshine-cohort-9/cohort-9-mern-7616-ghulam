@@ -1,18 +1,28 @@
 import type { ReactElement } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
+import { useToast } from '../context/ToastContext'
 import { useNotes } from '../hooks/useNotes'
 import { Button, Icon, Skeleton } from '../components/ui'
 
 export function Profile(): ReactElement | null {
   const { user, logout } = useAuth()
   const { theme, toggle: toggleTheme } = useTheme()
+  const { notify } = useToast()
 
   const { notes: activeNotes, isLoading: loadingActive, error: errorActive } = useNotes({ status: 'active' })
   const { notes: archivedNotes, isLoading: loadingArchived, error: errorArchived } = useNotes({ status: 'archived' })
   const { notes: trashedNotes, isLoading: loadingTrashed, error: errorTrashed } = useNotes({ status: 'trashed' })
 
   if (!user) return null
+
+  const handleLogout = async (): Promise<void> => {
+    try {
+      await logout()
+    } catch {
+      notify('error', 'Could not sign out', 'Check your connection and try again.')
+    }
+  }
 
   const getInitials = (name: string): string => {
     return name
@@ -53,7 +63,7 @@ export function Profile(): ReactElement | null {
             </p>
           </div>
         </div>
-        <Button variant="outline" onClick={logout} className="shrink-0">
+        <Button variant="outline" onClick={() => void handleLogout()} className="shrink-0">
           <Icon name="logout" size="sm" className="mr-2" />
           Sign Out
         </Button>
