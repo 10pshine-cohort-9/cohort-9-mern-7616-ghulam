@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react'
+import type { ReactElement } from 'react'
 import userEvent from '@testing-library/user-event'
 import { ApiError } from '../../services/types'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
@@ -23,7 +24,7 @@ jest.mock('../../services', () => ({
 
 const ADA = { id: '1', name: 'Ada', email: 'ada@example.com', createdAt: '2026-01-01T00:00:00.000Z' }
 
-function Consumer() {
+function Consumer(): ReactElement {
   const auth = useAuth()
 
   return (

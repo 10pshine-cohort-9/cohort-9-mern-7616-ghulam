@@ -22,11 +22,11 @@ function nonJsonResponse(status: number): Response {
   } as unknown as Response
 }
 
-const fetchMock = jest.fn()
+const fetchMock = jest.fn<ReturnType<typeof fetch>, Parameters<typeof fetch>>()
 
 beforeEach(() => {
   fetchMock.mockReset()
-  globalThis.fetch = fetchMock as unknown as typeof fetch
+  globalThis.fetch = fetchMock
 })
 
 describe('request', () => {
@@ -43,7 +43,7 @@ describe('request', () => {
 
     await request('/notes')
 
-    expect(fetchMock.mock.calls[0][1].credentials).toBe('include')
+    expect(fetchMock.mock.calls[0][1]?.credentials).toBe('include')
   })
 
   it('defaults to GET with no body and no content type', async () => {
@@ -52,9 +52,9 @@ describe('request', () => {
     await request('/notes')
 
     const init = fetchMock.mock.calls[0][1]
-    expect(init.method).toBe('GET')
-    expect(init.body).toBeUndefined()
-    expect(init.headers).toBeUndefined()
+    expect(init?.method).toBe('GET')
+    expect(init?.body).toBeUndefined()
+    expect(init?.headers).toBeUndefined()
   })
 
   it('serialises a body and sets the content type when one is given', async () => {
@@ -63,9 +63,9 @@ describe('request', () => {
     await request('/notes', { method: 'POST', body: { title: 'A note' } })
 
     const init = fetchMock.mock.calls[0][1]
-    expect(init.method).toBe('POST')
-    expect(init.body).toBe(JSON.stringify({ title: 'A note' }))
-    expect(init.headers).toEqual({ 'Content-Type': 'application/json' })
+    expect(init?.method).toBe('POST')
+    expect(init?.body).toBe(JSON.stringify({ title: 'A note' }))
+    expect(init?.headers).toEqual({ 'Content-Type': 'application/json' })
   })
 
   it('returns the envelope data on success', async () => {

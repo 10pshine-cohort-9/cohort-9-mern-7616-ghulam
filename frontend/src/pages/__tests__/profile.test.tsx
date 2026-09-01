@@ -43,8 +43,8 @@ function makeNote(overrides: Partial<Note> = {}): Note {
   } as Note
 }
 
-function serve(counts: { active: number; archived: number; trashed: number }) {
-  const build = (count: number, status: Note['status']) =>
+function serve(counts: { active: number; archived: number; trashed: number }): void {
+  const build = (count: number, status: Note['status']): Note[] =>
     Array.from({ length: count }, (_, index) =>
       makeNote({ id: `${status}-${index}`, status }),
     )

@@ -3,20 +3,21 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { ToastProvider } from '../../context/ToastContext'
 import type { Note, NoteQuery } from '../../types'
+import type { NotesService } from '../../services/types'
 import { Dashboard } from '../Dashboard'
 
-const list = jest.fn()
-const setStatus = jest.fn()
-const setPinned = jest.fn()
-const setFavourite = jest.fn()
+const list = jest.fn<ReturnType<NotesService['list']>, Parameters<NotesService['list']>>()
+const setStatus = jest.fn<ReturnType<NotesService['setStatus']>, Parameters<NotesService['setStatus']>>()
+const setPinned = jest.fn<ReturnType<NotesService['setPinned']>, Parameters<NotesService['setPinned']>>()
+const setFavourite = jest.fn<ReturnType<NotesService['setFavourite']>, Parameters<NotesService['setFavourite']>>()
 
 jest.mock('../../services', () => ({
   authService: { getCurrentUser: jest.fn().mockResolvedValue(null) },
   notesService: {
-    list: (...args: unknown[]) => list(...args),
-    setStatus: (...args: unknown[]) => setStatus(...args),
-    setPinned: (...args: unknown[]) => setPinned(...args),
-    setFavourite: (...args: unknown[]) => setFavourite(...args),
+    list: (...args: Parameters<NotesService['list']>) => list(...args),
+    setStatus: (...args: Parameters<NotesService['setStatus']>) => setStatus(...args),
+    setPinned: (...args: Parameters<NotesService['setPinned']>) => setPinned(...args),
+    setFavourite: (...args: Parameters<NotesService['setFavourite']>) => setFavourite(...args),
   },
 }))
 
@@ -36,9 +37,9 @@ function makeNote(overrides: Partial<Note> = {}): Note {
 }
 
 function serve(active: Note[], archived: Note[] = []) {
-  list.mockImplementation((query: NoteQuery) => {
-    if (query.status === 'archived') return Promise.resolve(archived)
-    const search = query.search ?? ''
+  list.mockImplementation((query?: NoteQuery) => {
+    if (query?.status === 'archived') return Promise.resolve(archived)
+    const search = query?.search ?? ''
     if (!search) return Promise.resolve(active)
     return Promise.resolve(
       active.filter((note) => note.title.toLowerCase().includes(search.toLowerCase())),
@@ -62,9 +63,9 @@ function renderDashboard(path = '/') {
 
 beforeEach(() => {
   list.mockReset()
-  setStatus.mockReset().mockResolvedValue(undefined)
-  setPinned.mockReset().mockResolvedValue(undefined)
-  setFavourite.mockReset().mockResolvedValue(undefined)
+  setStatus.mockReset().mockResolvedValue(makeNote())
+  setPinned.mockReset().mockResolvedValue(makeNote())
+  setFavourite.mockReset().mockResolvedValue(makeNote())
 })
 
 describe('Dashboard', () => {
@@ -99,15 +100,19 @@ describe('Dashboard', () => {
         makeNote({ id: '2', title: 'Second' }),
         makeNote({ id: '3', title: 'Third' }),
       ],
-      [makeNote({ id: '4', title: 'Old', status: 'archived' })],
+      [
+        makeNote({ id: '4', title: 'Old', status: 'archived' }),
+        makeNote({ id: '5', title: 'Older', status: 'archived' }),
+      ],
     )
     renderDashboard()
 
     await screen.findByRole('button', { name: 'First' })
     const tiles = screen.getAllByRole('definition').map((tile) => tile.textContent)
+    // Distinct counts, so swapping the pinned and archived tiles fails the test.
     expect(tiles[0]).toBe('3')
     expect(tiles[1]).toBe('1')
-    expect(tiles[2]).toBe('1')
+    expect(tiles[2]).toBe('2')
   })
 
   it('leaves the totals alone while the search narrows the grid', async () => {

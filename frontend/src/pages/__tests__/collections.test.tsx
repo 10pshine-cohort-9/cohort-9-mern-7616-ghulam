@@ -4,24 +4,25 @@ import type { ReactElement } from 'react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { ToastProvider } from '../../context/ToastContext'
 import type { Note, NoteQuery } from '../../types'
+import type { NotesService } from '../../services/types'
 import { Archived } from '../Archived'
 import { Favourites } from '../Favourites'
 import { Trash } from '../Trash'
 
-const list = jest.fn()
-const remove = jest.fn()
-const setStatus = jest.fn()
-const setPinned = jest.fn()
-const setFavourite = jest.fn()
+const list = jest.fn<ReturnType<NotesService['list']>, Parameters<NotesService['list']>>()
+const remove = jest.fn<ReturnType<NotesService['remove']>, Parameters<NotesService['remove']>>()
+const setStatus = jest.fn<ReturnType<NotesService['setStatus']>, Parameters<NotesService['setStatus']>>()
+const setPinned = jest.fn<ReturnType<NotesService['setPinned']>, Parameters<NotesService['setPinned']>>()
+const setFavourite = jest.fn<ReturnType<NotesService['setFavourite']>, Parameters<NotesService['setFavourite']>>()
 
 jest.mock('../../services', () => ({
   authService: { getCurrentUser: jest.fn().mockResolvedValue(null) },
   notesService: {
-    list: (...args: unknown[]) => list(...args),
-    remove: (...args: unknown[]) => remove(...args),
-    setStatus: (...args: unknown[]) => setStatus(...args),
-    setPinned: (...args: unknown[]) => setPinned(...args),
-    setFavourite: (...args: unknown[]) => setFavourite(...args),
+    list: (...args: Parameters<NotesService['list']>) => list(...args),
+    remove: (...args: Parameters<NotesService['remove']>) => remove(...args),
+    setStatus: (...args: Parameters<NotesService['setStatus']>) => setStatus(...args),
+    setPinned: (...args: Parameters<NotesService['setPinned']>) => setPinned(...args),
+    setFavourite: (...args: Parameters<NotesService['setFavourite']>) => setFavourite(...args),
   },
 }))
 
@@ -56,9 +57,9 @@ function renderPage(page: ReactElement, path = '/') {
 beforeEach(() => {
   list.mockReset().mockResolvedValue([])
   remove.mockReset().mockResolvedValue(undefined)
-  setStatus.mockReset().mockResolvedValue(undefined)
-  setPinned.mockReset().mockResolvedValue(undefined)
-  setFavourite.mockReset().mockResolvedValue(undefined)
+  setStatus.mockReset().mockResolvedValue(makeNote())
+  setPinned.mockReset().mockResolvedValue(makeNote())
+  setFavourite.mockReset().mockResolvedValue(makeNote())
 })
 
 describe('Favourites', () => {
@@ -231,8 +232,8 @@ describe('Trash', () => {
       makeNote({ id: '1', title: 'One', status: 'trashed' }),
       makeNote({ id: '2', title: 'Two', status: 'trashed' }),
     ]
-    list.mockImplementation((query: NoteQuery) =>
-      Promise.resolve(query.status === 'trashed' ? trashed : []),
+    list.mockImplementation((query?: NoteQuery) =>
+      Promise.resolve(query?.status === 'trashed' ? trashed : []),
     )
     renderPage(<Trash />)
 
