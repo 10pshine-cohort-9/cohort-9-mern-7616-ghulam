@@ -21,7 +21,7 @@ local storage adapter has been removed — the app now talks to the API over HTT
 
 Frontend is React 19 with TypeScript, built by Vite, and styled with Tailwind CSS v4.
 Rich-text editing uses TipTap. The backend is Node and Express 5 with TypeScript, over
-MongoDB via Mongoose, with Pino logging and JWT authentication to follow.
+MongoDB via Mongoose, with Pino logging and JWT authentication over httpOnly cookies.
 
 ## Requirements
 
@@ -109,7 +109,7 @@ scanner does not run the tests:
 ```bash
 cd backend && npm run test:coverage && cd ..
 cd frontend && npm run test:coverage && cd ..
-npx sonar-scanner -Dsonar.host.url=http://localhost:9000 -Dsonar.token=<your-token>
+npx sonar-scanner -Dsonar.host.url=http://localhost:9000 -Dsonar.token="$SONAR_TOKEN"
 ```
 
 `sonar.coverage.exclusions` covers the composition root, the database connection and the
